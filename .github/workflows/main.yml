@@ -1,0 +1,26 @@
+name: Buildozer APK Build
+
+on:
+  push:
+    branches: [ "main", "master" ] # main 또는 master 브랜치에 코드가 올라오면 자동 실행
+  workflow_dispatch: # 수동으로 실행할 수도 있게 함
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build with Buildozer
+      uses: ArtemSBulgakov/buildozer-action@v1
+      id: buildozer
+      with:
+        command: buildozer android debug
+        
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: package
+        path: ${{ steps.buildozer.outputs.filename }}
